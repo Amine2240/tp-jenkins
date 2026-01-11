@@ -111,6 +111,7 @@ pipeline {
                             -Dsonar.projectKey=tp5 ^
                             -Dsonar.projectName="TP5 Java Project" ^
                             -Dsonar.host.url=%SONAR_HOST_URL%
+                            -Dsonar.login=%SONAR_TOKEN%
                         """
                         // Note : ^ est le caractère de saut de ligne pour Windows cmd
                     }
