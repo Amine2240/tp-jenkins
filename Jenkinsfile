@@ -29,20 +29,45 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    echo '========== PHASE TEST =========='
+                                    echo '========== Phase Test =========='
 
-                    // 1. Lancement des tests unitaires
-                    echo 'Lancement des tests unitaires...'
-                    sh './gradlew clean test --no-daemon'
+                                    // 1. Lancement des tests unitaires
+                                    echo 'Lancement des tests unitaires...'
+                                    bat './gradlew clean test'
 
-                    // 2. Archivage des résultats des tests unitaires
-                    echo 'Archivage des résultats des tests...'
-                    junit '**/build/test-results/test/*.xml'
+                                    // 2. Archivage des résultats des tests
+                                    echo 'Archivage des résultats des tests...'
+                                    junit '**/build/test-results/test/*.xml'
 
-                    // 3. Génération du rapport JaCoCo
-                    echo 'Génération du rapport de couverture...'
-                    sh './gradlew jacocoTestReport --no-daemon'
-                }
+                                    // Publication du rapport HTML des tests
+                                    publishHTML([
+                                        allowMissing: false,
+                                        alwaysLinkToLastBuild: true,
+                                        keepAll: true,
+                                        reportDir: 'build/reports/tests/test',
+                                        reportFiles: 'index.html',
+                                        reportName: 'Test Report'
+                                    ])
+
+                                    // 3. Génération des rapports Cucumber
+                                    echo 'Génération des rapports Cucumber...'
+                                    bat './gradlew test'
+
+                                    // Publication du rapport Cucumber
+                                    cucumber buildStatus: 'UNSTABLE',
+                                            reportTitle: 'Rapport Cucumber',
+                                            fileIncludePattern: 'reports/*.json',
+                                            trendsLimit: 10
+
+                                    publishHTML([
+                                        allowMissing: false,
+                                        alwaysLinkToLastBuild: true,
+                                        keepAll: true,
+                                        reportDir: 'build/reports/cucumber/generated/html',
+                                        reportFiles: 'overview-features.html',
+                                        reportName: 'Cucumber HTML Report'
+                                    ])
+                                }
             }
             post {
                 always {
@@ -77,7 +102,7 @@ pipeline {
                     echo 'Analyse de la qualité du code avec SonarQube...'
 
                     withSonarQubeEnv('SonarQube') {
-                        sh """
+                        bat """
                             ./gradlew sonarqube --no-daemon \
                             -Dsonar.projectKey=tp5 \
                             -Dsonar.projectName="TP5 Java Project" \
@@ -117,11 +142,11 @@ pipeline {
 
                     // 1. Génération du fichier JAR
                     echo 'Génération du fichier JAR...'
-                    sh './gradlew clean build -x test --no-daemon'
+                    bat './gradlew clean build -x test --no-daemon'
 
                     // 2. Génération de la documentation
                     echo 'Génération de la documentation Javadoc...'
-                    sh './gradlew javadoc --no-daemon'
+                    bat './gradlew javadoc --no-daemon'
 
                     // 3. Archivage du JAR et de la documentation
                     echo 'Archivage des artefacts...'
@@ -152,7 +177,7 @@ pipeline {
                     echo '========== PHASE DEPLOY =========='
                     echo 'Déploiement vers mymavenrepo.com...'
 
-                    sh """
+                    bat """
                         ./gradlew publish --no-daemon \
                         -PmavenRepoUsername=${MAVEN_REPO_USER} \
                         -PmavenRepoPassword=${MAVEN_REPO_PASSWORD}
