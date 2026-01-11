@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         SONAR_HOST_URL = 'http://localhost:9000'
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = credentials('jenkins-token')
         GRADLE_USER_HOME = "${WORKSPACE}/.gradle"
         MAVEN_REPO_USER = 'myMavenRepo'
         // Créez un credential avec l'ID 'mymavenrepo-password' contenant '9Adoum2004'
