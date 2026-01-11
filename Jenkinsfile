@@ -13,7 +13,7 @@ pipeline {
 
         // Les credentials sont injectés en tant que variables d'environnement
         // Gradle détectera automatiquement 'SONAR_TOKEN' s'il est présent dans l'env
-        SONAR_TOKEN = credentials('sonar-token')
+        SONAR_TOKEN = "sonar-token"
 
         GRADLE_USER_HOME = "${WORKSPACE}/.gradle"
         MAVEN_REPO_USER = 'myMavenRepo'
