@@ -161,19 +161,13 @@ pipeline {
     post {
         always {
             echo 'Nettoyage du workspace...'
-            cleanWs(
-                deleteDirs: true,
-                patterns: [
-                    [pattern: '.gradle', type: 'INCLUDE'],
-                    [pattern: 'build', type: 'INCLUDE']
-                ]
-            )
-        }
-        success {
-            echo 'Pipeline terminé avec succès'
+            node {
+                cleanWs()
+            }
         }
         failure {
             echo 'Pipeline en échec'
         }
     }
+
 }
