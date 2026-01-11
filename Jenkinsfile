@@ -161,9 +161,7 @@ pipeline {
     post {
         always {
             echo 'Nettoyage du workspace...'
-            node {
-                cleanWs()
-            }
+            cleanWs()
         }
         failure {
             echo 'Pipeline en échec'
