@@ -161,8 +161,8 @@ pipeline {
     post {
         always {
             echo 'Nettoyage du workspace...'
-            cleanWs()
-        }
+            deleteDir()
+                }
         failure {
             echo 'Pipeline en échec'
         }
