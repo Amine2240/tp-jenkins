@@ -55,22 +55,25 @@ pipeline {
         }
 
         stage('Code Analysis') {
-            steps {
-                script {
-                    echo '--- Analyse SonarQube ---'
-                    withSonarQubeEnv('SonarQube') {
-                        // Utilisation de la syntaxe Windows (^) et injection des variables (%)
-                        bat """
-                            gradle sonar --no-daemon ^
-                            -Dsonar.projectKey=tp5 ^
-                            -Dsonar.projectName="TP5 Java Project" ^
-                            -Dsonar.host.url=%SONAR_HOST_URL% ^
-                            -Dsonar.login=%SONAR_TOKEN%
-                        """
+                    steps {
+                        script {
+                            echo '--- DIAGNOSTIC TOKEN ---'
+                            // IMPORTANT: Colle ton vrai token ci-dessous à la place de sqp_xxxx
+                            // C'est juste pour ce test, on l'enlèvera après !
+                            def MON_TOKEN_EN_DUR = "3a88b85aff109804585f575c5f4045803221748a"
+
+                            withSonarQubeEnv('SonarQube') {
+                                bat """
+                                    gradle sonar --no-daemon ^
+                                    -Dsonar.projectKey=tp5 ^
+                                    -Dsonar.projectName="TP5 Java Project" ^
+                                    -Dsonar.host.url=http://localhost:9000 ^
+                                    -Dsonar.token=${MON_TOKEN_EN_DUR}
+                                """
+                            }
+                        }
                     }
                 }
-            }
-        }
 
         stage('Quality Gate') {
             steps {
