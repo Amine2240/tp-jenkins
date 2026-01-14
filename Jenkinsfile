@@ -13,7 +13,7 @@ pipeline {
 
         // Les credentials sont injectés en tant que variables d'environnement
         // Gradle détectera automatiquement 'SONAR_TOKEN' s'il est présent dans l'env
-        SONAR_TOKEN = "sonar-token"
+        SONAR_TOKEN = credentials('sonar-token')
 
         GRADLE_USER_HOME = "${WORKSPACE}/.gradle"
         MAVEN_REPO_USER = 'myMavenRepo'
@@ -110,7 +110,7 @@ pipeline {
                             ./gradlew sonar --no-daemon ^
                             -Dsonar.projectKey=tp5 ^
                             -Dsonar.projectName="TP5 Java Project" ^
-                            -Dsonar.host.url=%SONAR_HOST_URL%
+                            -Dsonar.host.url=%SONAR_HOST_URL% ^
                             -Dsonar.login=%SONAR_TOKEN%
                         """
                         // Note : ^ est le caractère de saut de ligne pour Windows cmd
