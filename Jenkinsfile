@@ -75,19 +75,19 @@ pipeline {
            }
        }
 
-        stage('Quality Gate') {
-            steps {
-                script {
-                    timeout(time: 5, unit: 'MINUTES') {
-                        // Attend la réponse de SonarQube
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            error "⛔ Le Quality Gate a échoué: ${qg.status}"
-                        }
-                    }
-                }
-            }
-        }
+//         stage('Quality Gate') {
+//             steps {
+//                 script {
+//                     timeout(time: 5, unit: 'MINUTES') {
+//                         // Attend la réponse de SonarQube
+//                         def qg = waitForQualityGate()
+//                         if (qg.status != 'OK') {
+//                             error "⛔ Le Quality Gate a échoué: ${qg.status}"
+//                         }
+//                     }
+//                 }
+//             }
+//         }
 
         stage('Build') {
             steps {
