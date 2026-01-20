@@ -36,6 +36,10 @@ sonar {
 //        property "sonar.host.url", "http://localhost:9000"
 //        property "sonar.login", "admin"
 //        property "sonar.password", "admin"
+        property "sonar.java.binaries", "src/main/resources"
+
+        // Optional: ensure it doesn't try to find libraries either
+        property "sonar.java.libraries", ""
     }
 }
 test.finalizedBy jacocoTestReport

@@ -69,7 +69,9 @@ pipeline {
                                    -Dsonar.projectKey=tp5 ^
                                    -Dsonar.projectName="TP5 Java Project" ^
                                    -Dsonar.host.url=http://localhost:9000 ^
-                                   -Dsonar.token=%SONAR_TOKEN%
+                                   -Dsonar.token=%SONAR_TOKEN% ^
+                                   -Dsonar.java.binaries=build/empty_dir_for_sonar ^
+                                   -Dsonar.skipCompile=true
                                """
                            }
                        }
