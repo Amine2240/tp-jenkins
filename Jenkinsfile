@@ -65,6 +65,7 @@ pipeline {
                                // Note: We use %SONAR_TOKEN% (Windows batch syntax)
                                // instead of ${SONAR_TOKEN} (Groovy syntax) to fix the security warning
                                bat """
+                                   if not exist build\\empty_dir_for_sonar mkdir build\\empty_dir_for_sonar
                                    gradle sonar --no-daemon ^
                                    -Dsonar.projectKey=tp5 ^
                                    -Dsonar.projectName="TP5 Java Project" ^
