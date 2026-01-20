@@ -126,7 +126,7 @@ pipeline {
             script {
                 // Tentative d'envoi Slack sécurisée
                 try {
-                    slackSend(channel: "${env.SLACK_CHANNEL}", color: 'good', message: "✅ Succès: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+                    slackSend(channel: '#dev-notifications', color: 'good', message: "✅ Succès: ${env.JOB_NAME} #${env.BUILD_NUMBER}", tokenCredentialId: 'slack-webhook')
                 } catch (Exception e) {
                     echo "⚠️ Notification Slack ignorée (Plugin manquant ou erreur config)."
                 }
