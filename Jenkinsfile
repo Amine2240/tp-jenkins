@@ -55,29 +55,25 @@ pipeline {
         }
 
        stage('Code Analysis') {
-                   steps {
-                       script {
-                           echo '--- DIAGNOSTIC TOKEN ---'
+           steps {
+               script {
+                   withSonarQubeEnv('SonarQube') {
+                       bat """
+                           if not exist build\\empty_dir_for_sonar mkdir build\\empty_dir_for_sonar
 
-                           // We use withSonarQubeEnv if you configured the server in Jenkins Global Tools
-                           // If not, we manually pass the host and token below.
-                           withSonarQubeEnv('SonarQube') {
-                               // Note: We use %SONAR_TOKEN% (Windows batch syntax)
-                               // instead of ${SONAR_TOKEN} (Groovy syntax) to fix the security warning
-                               bat """
-                                   if not exist build\\empty_dir_for_sonar mkdir build\\empty_dir_for_sonar
-                                   gradle sonar --no-daemon ^
-                                   -Dsonar.projectKey=tp5 ^
-                                   -Dsonar.projectName="TP5 Java Project" ^
-                                   -Dsonar.host.url=http://localhost:9000 ^
-                                   -Dsonar.token=%SONAR_TOKEN% ^
-                                   -Dsonar.java.binaries=build/empty_dir_for_sonar ^
-                                   -Dsonar.skipCompile=true
-                               """
-                           }
-                       }
+                           gradle sonar --no-daemon ^
+                           -Dsonar.projectKey=tp5 ^
+                           -Dsonar.projectName="TP5 Java Project" ^
+                           -Dsonar.host.url=http://localhost:9000 ^
+                           -Dsonar.token=%SONAR_TOKEN% ^
+                           -Dsonar.java.binaries=build/empty_dir_for_sonar ^
+                           -Dsonar.java.source=1.8 ^
+                           -Dsonar.skipCompile=true
+                       """
                    }
                }
+           }
+       }
 
         stage('Quality Gate') {
             steps {
