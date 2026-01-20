@@ -54,26 +54,27 @@ pipeline {
             }
         }
 
-        stage('Code Analysis') {
-                    steps {
-                        script {
-                            echo '--- DIAGNOSTIC TOKEN ---'
-                            // IMPORTANT: Colle ton vrai token ci-dessous à la place de sqp_xxxx
-                            // C'est juste pour ce test, on l'enlèvera après !
-                            def MON_TOKEN_EN_DUR = "3a88b85aff109804585f575c5f4045803221748a"
+       stage('Code Analysis') {
+                   steps {
+                       script {
+                           echo '--- DIAGNOSTIC TOKEN ---'
 
-                            withSonarQubeEnv('SonarQube') {
-                                bat """
-                                    gradle sonar --no-daemon ^
-                                    -Dsonar.projectKey=tp5 ^
-                                    -Dsonar.projectName="TP5 Java Project" ^
-                                    -Dsonar.host.url=http://localhost:9000 ^
-                                    -Dsonar.token=${MON_TOKEN_EN_DUR}
-                                """
-                            }
-                        }
-                    }
-                }
+                           // We use withSonarQubeEnv if you configured the server in Jenkins Global Tools
+                           // If not, we manually pass the host and token below.
+                           withSonarQubeEnv('SonarQube') {
+                               // Note: We use %SONAR_TOKEN% (Windows batch syntax)
+                               // instead of ${SONAR_TOKEN} (Groovy syntax) to fix the security warning
+                               bat """
+                                   gradle sonar --no-daemon ^
+                                   -Dsonar.projectKey=tp5 ^
+                                   -Dsonar.projectName="TP5 Java Project" ^
+                                   -Dsonar.host.url=http://localhost:9000 ^
+                                   -Dsonar.token=%SONAR_TOKEN%
+                               """
+                           }
+                       }
+                   }
+               }
 
         stage('Quality Gate') {
             steps {
