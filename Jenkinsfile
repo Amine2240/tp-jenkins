@@ -124,13 +124,13 @@ pipeline {
         }
         success {
             script {
-                // Tentative d'envoi Slack sécurisée
-                try {
-                    slackSend(channel: '#dev-notifications', color: 'good', message: "✅ Succès: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
-                } catch (Exception e) {
-                    echo "⚠️ Notification Slack ignorée (Plugin manquant ou erreur config)."
-                }
-            }
+            				withCredentials([string(credentialsId: 'SLACK_WEBHOOK', variable: 'SLACK_WEBHOOK_URL')]) {
+            					bat """
+                curl -X POST -H "Content-type: application/json" --data "{\\"text\\":\\"✅ SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER} ${env.BUILD_URL}\\"}" %SLACK_WEBHOOK_URL%
+                """
+            				}
+
+            			}
         }
         failure {
             script {
